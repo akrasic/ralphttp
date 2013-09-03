@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Ralphttp::VERSION
   spec.authors       = ["Antun Krasic"]
   spec.email         = ["antun@martuna.co"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{HTTP performance testing tool}
+  spec.summary       = %q{Test the HTTP performance}
   spec.homepage      = ""
   spec.license       = "MIT"
 
