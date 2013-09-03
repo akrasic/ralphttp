@@ -6,13 +6,14 @@ module Ralphttp
     def start
       options = arguments
 
-      if options[:url].nil? || options[:concurrent].nil? ||
-        options[:requests].nil?
-        puts options.inspect
-      else
-        wreckit = Ralphttp::Wreckit.new(options)
-        wreckit.blast
+      if options[:url].nil? || options[:concurrent].nil? || options[:requests].nil?
+        puts @params
+        exit
       end
+
+      wreckit = Ralphttp::Wreckit.new(options)
+      wreckit.blast
+      wreckit.analyze
     end
 
     # Public - Parse arguments for the script
@@ -41,12 +42,12 @@ module Ralphttp
             options[:useragent] = ua
           end
 
-          opts.on('-s', '--csv', 'Output data as CSV format') do |csv|
-            options[:csv] = csv
+          opts.on('-d', '--detail', 'Show detailed report') do |d|
+            options[:detail] = d
           end
 
-          opts.on('-j', '--json', 'Output data as JSON format') do |json|
-            options[:json] = json
+          opts.on('-s', '--csv FILE', 'Output CSV data into file') do |c|
+            options[:csv] = c
           end
 
           opts.on('-h', '--help', 'Show help') do
@@ -56,7 +57,7 @@ module Ralphttp
           #opts.parse!
         end
         params.parse!
-        options[:url] = url_parse(options[:url])
+        options[:url] = url_parse(options[:url]) unless options[:url].nil?
         @params = params
       rescue OptionParser::InvalidOption, OptionParser::MissingArgument
         puts "What2"

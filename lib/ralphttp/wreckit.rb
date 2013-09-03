@@ -4,11 +4,10 @@
 module Ralphttp
 
   # Public;  Get benchmarking information for a HTTP server
-  class Wreckit
+  class Wreckit < Ralphttp::Fixit
   attr_accessor :domain
   attr_accessor :hammer
   attr_accessor :ua
-  attr_accessor :bucket
 
   # Public: Start the class and assign the domain anem to start
   #
@@ -23,6 +22,7 @@ module Ralphttp
   #
   # Returns Nil
   def initialize(options)
+    super(options)
     @domain = options[:url]
     @ua = options[:useragent]
     @hammer = { concurrent:  options[:concurrent],
@@ -54,15 +54,17 @@ module Ralphttp
         # Join the hands and go ahead
         arr.each do |t|
           t.join
-          puts "#{t['date']} :: #{t['response']} :: #{t['time']} ms"
+          # puts "#{t['date']} :: #{t['response']} :: #{t['time']} ms"
         end
 
       # End initial loop
       end
-      end_loop = Time.now - start
-      puts "Took: #{end_loop} seconds"
+      @total_time = sprintf('%.2f', (Time.now - start))
     rescue ThreadError => e
       puts "Ralphttp::Wreckit error: #{e}"
+    rescue SocketError => e
+      puts "#{e} - Domain not found"
+      exit
     end
   end
 
@@ -83,7 +85,6 @@ module Ralphttp
   def getpage
     begin
       out = start_http
-
     rescue Errno::ECONNREFUSED
       puts 'Connection refused'
     end
@@ -106,7 +107,14 @@ module Ralphttp
       request = Net::HTTP::Get.new(@domain, user_agent)
       end_request = sprintf('%.4f', ((Time.now - start_request) * (10**6)))
 
+
       response = http.request request
+      if response.code == '200'
+        @http_ok << response.code
+      else
+        @http_failed << response.code
+      end
+
       out['response'] = response.code
       out['time'] = end_request
       out['date'] = Time.now.to_i
