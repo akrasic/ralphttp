@@ -5,8 +5,7 @@ module Ralphttp
     attr_accessor :csv
     attr_accessor :bucket
     attr_accessor :total_time
-    attr_accessor :http_failed
-    attr_accessor :http_ok
+    attr_accessor :status
 
     # Public: Start the class based on selected options
     #
@@ -14,8 +13,7 @@ module Ralphttp
     #
     # Returns nil
     def initialize(options)
-      @http_failed = []
-      @http_ok = []
+      @status = {}
       @detailed = options[:detailed] unless options[:detailed].nil?
       @csv = options[:csv] unless options[:csv].nil?
     end
@@ -45,8 +43,7 @@ module Ralphttp
       reqs_per_sec = sprintf('%.2f', (req.inject(:+).to_f / req.length.to_f))
 
       puts "\nRequests per second: #{reqs_per_sec}"
-      puts "Successful connections ( 200 OK ): #{@http_ok.length}"
-      puts "Failed connections: #{@http_failed.length}"
+      @status.map {|x,y| puts "HTTP Status #{x}: #{y}"}
       puts "Total time: #{@total_time} s"
     end
 

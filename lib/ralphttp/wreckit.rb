@@ -109,11 +109,7 @@ module Ralphttp
       end_request = sprintf('%.4f', ((Time.now - start_request) * (10**6)))
 
       response = http.request request
-      if response.code == '200'
-        @http_ok << response.code
-      else
-        @http_failed << response.code
-      end
+      http_status_counter(response.code)
 
       out['response'] = response.code
       out['time'] = end_request
@@ -127,5 +123,17 @@ module Ralphttp
     out
   end
 
+  # Private: Get number of HTTP status codes and their count
+  #
+  # code - Integer status code
+  #
+  # Returns nil
+  def http_status_counter(code)
+    if @status[code].nil?
+      @status[code] = 0
+    end
+
+    @status[code] = (@status[code].to_i + 1)
+  end
   end
 end
