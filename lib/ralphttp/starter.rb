@@ -73,13 +73,14 @@ module Ralphttp
     # Private - Checks and corrects the entered URL to proper syntax
     #
     # Returns String Parsed URL
-    def url_parse( url )
+    def url_parse(url)
+      protocols = ['http', 'https']
       uri = URI.parse(url)
 
       uri = URI.parse("http://#{url}") if uri.class == URI::Generic
-      uri.path = "/" unless uri.path.match /^\//
+      uri.path = '/' unless uri.path.match(/^\//)
 
-      if ['http', 'https'].include?(uri.scheme)
+      if protocols.include?(uri.scheme)
         uri
       else
         puts "Incorrect URL added - #{url}"

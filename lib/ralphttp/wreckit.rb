@@ -104,9 +104,9 @@ module Ralphttp
 
     Net::HTTP.start(@domain.host, @domain.port) do |http|
       start_request = Time.now
-      request = Net::HTTP::Get.new(@domain, user_agent)
+      request = Net::HTTP::Get.new(@domain)
+      request.add_field('User-Agent', user_agent)
       end_request = sprintf('%.4f', ((Time.now - start_request) * (10**6)))
-
 
       response = http.request request
       if response.code == '200'
