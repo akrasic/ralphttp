@@ -25,8 +25,8 @@ module Ralphttp
     super(options)
     @domain = options[:url]
     @ua = options[:useragent]
-    @hammer = { concurrent:  options[:concurrent],
-                total: options[:requests] }
+    @hammer = { :concurrent =>  options[:concurrent],
+                :total => options[:requests] }
     @bucket = {}
   end
 
