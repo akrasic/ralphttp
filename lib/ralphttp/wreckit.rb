@@ -87,6 +87,8 @@ module Ralphttp
       out = start_http
     rescue Errno::ECONNREFUSED
       puts 'Connection refused'
+    rescue Errno::ETIMEDOUT
+      puts 'Can not connect to the provided URL'
     end
     out
   end
