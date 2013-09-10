@@ -1,12 +1,16 @@
 module Ralphttp
+  #
+  # Loading class
   class Starter
+    PROTOCOLS = %w(http https)
     attr_accessor :params
 
     # Public - Initialize the start with new
     def start
       options = arguments
 
-      if options[:url].nil? || options[:concurrent].nil? || options[:requests].nil?
+      if options[:url].nil? || options[:concurrent].nil? ||
+        options[:requests].nil?
         puts @params
         exit
       end
@@ -24,13 +28,15 @@ module Ralphttp
 
       begin
         params = OptionParser.new do |opts|
-          opts.banner = "Usage: ralphttp [OPTIONS]"
+          opts.banner = 'Usage: ralphttp [OPTIONS]'
 
-          opts.on('-c', '--concurrent NUM', 'Number of concurrent connections')           do |concurrent|
+          opts.on('-c', '--concurrent NUM',
+                  'Number of concurrent connections')do |concurrent|
             options[:concurrent] = concurrent
           end
 
-          opts.on('-n', '--requests NUM', 'Total number of requests to use')           do |reqs|
+          opts.on('-n', '--requests NUM',
+                  'Total number of requests to use') do |reqs|
             options[:requests] = reqs
           end
 
@@ -54,13 +60,11 @@ module Ralphttp
             puts opts
             exit
           end
-          #opts.parse!
         end
         params.parse!
         options[:url] = url_parse(options[:url]) unless options[:url].nil?
         @params = params
       rescue OptionParser::InvalidOption, OptionParser::MissingArgument
-        puts "What2"
        puts params
        exit
       end # End begin
@@ -75,17 +79,12 @@ module Ralphttp
     # Returns String Parsed URL
     def url_parse(url)
       begin
-        protocols = ['http', 'https']
         uri = URI.parse(url)
 
         uri = URI.parse("http://#{url}") if uri.class == URI::Generic
         uri.path = '/' unless uri.path.match(/^\//)
 
-        if protocols.include?(uri.scheme)
-          uri
-        else
-          puts "Incorrect URL added - #{url}"
-        end
+        uri if PROTOCOLS.include?(uri.scheme)
       rescue URI::InvalidURIError
         puts "Bad URL: #{url}"
       end

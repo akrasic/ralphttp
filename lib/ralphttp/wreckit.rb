@@ -63,7 +63,7 @@ module Ralphttp
     rescue ThreadError => e
       puts "Ralphttp::Wreckit error: #{e}"
     rescue SocketError => e
-      puts "#{e} - Domain not found"
+      puts "Can not connect to the URL"
       exit
     end
   end

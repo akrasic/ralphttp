@@ -14,11 +14,19 @@ module Ralphttp
     # Returns nil
     def initialize(options)
       @status = {}
-      @detailed = options[:detailed] unless options[:detailed].nil?
+      @detailed = options[:detail]
       @csv = options[:csv] unless options[:csv].nil?
     end
 
 
+    # Public: Output the header information
+    #
+    # Returns nil
+    def print_header
+      unless @detailed.nil?
+        puts '%-30s %-10s %-10s' % ['Time', 'Req/s', 'Avg resp (ms)']
+      end
+    end
     # Public: Analyze collected data and show reasonable output
     #
     # Return Text output
@@ -29,16 +37,15 @@ module Ralphttp
       ms = []
       comma = ['Time', 'Req/s', 'Avg. resp. (ms)']
 
-      puts '%-30s %-10s %-10s' % ['Time', 'Req/s', 'Avg resp (ms)']
+      print_header
       @bucket.map do |x, y|
         reqs = y.length
         req << reqs
         date = Time.at(x)
         ms = calc_response(y)
 
-        puts '%-30s %-10s %-20s' % [date, reqs, ms]
+        puts '%-30s %-10s %-20s' % [date, reqs, ms] unless @detailed.nil?
         comma << [date,reqs,ms]
-#        puts "#{date} - #{reqs} - #{ms}ms"
       end
       reqs_per_sec = sprintf('%.2f', (req.inject(:+).to_f / req.length.to_f))
 
