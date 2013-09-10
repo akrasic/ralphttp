@@ -74,16 +74,20 @@ module Ralphttp
     #
     # Returns String Parsed URL
     def url_parse(url)
-      protocols = ['http', 'https']
-      uri = URI.parse(url)
+      begin
+        protocols = ['http', 'https']
+        uri = URI.parse(url)
 
-      uri = URI.parse("http://#{url}") if uri.class == URI::Generic
-      uri.path = '/' unless uri.path.match(/^\//)
+        uri = URI.parse("http://#{url}") if uri.class == URI::Generic
+        uri.path = '/' unless uri.path.match(/^\//)
 
-      if protocols.include?(uri.scheme)
-        uri
-      else
-        puts "Incorrect URL added - #{url}"
+        if protocols.include?(uri.scheme)
+          uri
+        else
+          puts "Incorrect URL added - #{url}"
+        end
+      rescue URI::InvalidURIError
+        puts "Bad URL: #{url}"
       end
 
     end
