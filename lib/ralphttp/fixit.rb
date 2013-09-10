@@ -60,8 +60,7 @@ module Ralphttp
       resp.each do |re|
         r << re[1]
       end
-      total = r.inject(:+).to_f / r.length.to_f
-      total.to_i
+      sprintf('%.2f', (r.inject(:+).to_f / r.length.to_f))
     end
 
   end # EOC

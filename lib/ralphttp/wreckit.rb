@@ -68,7 +68,7 @@ module Ralphttp
     end
   end
 
-  private
+    private
 
   # Private: Calculate number of loops based on total number of connections
   # opposed to the total number of concurrent connections
