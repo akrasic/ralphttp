@@ -35,7 +35,11 @@ module Ralphttp
 
       req = []
       ms = []
-      comma = ['Time', 'Req/s', 'Avg. resp. (ms)']
+
+      unless @csv.nil?
+        csv_header = ['Time', 'Req/s', 'Avg. resp. (ms)']
+        csv = Ralphttp::CsvExport.new(csv_header)
+      end
 
       print_header
       @bucket.map do |x, y|
@@ -44,14 +48,19 @@ module Ralphttp
         date = Time.at(x)
         ms = calc_response(y)
 
-        puts '%-30s %-10s %-20s' % [date, reqs, ms] unless @detailed.nil?
-        comma << [date,reqs,ms]
+        csv.add_row([date, reqs, ms]) unless @csv.nil?
+
+        puts sprintf('%-30s %-10s %-20s',
+                     date, reqs, ms) unless @detailed.nil?
       end
       reqs_per_sec = sprintf('%.2f', (req.inject(:+).to_f / req.length.to_f))
 
       puts "\nRequests per second: #{reqs_per_sec}"
-      @status.map {|x,y| puts "HTTP Status #{x}: #{y}"}
+      @status.map { |x, y| puts "HTTP Status #{x}: #{y}" }
       puts "Total time: #{@total_time} s"
+
+      csv.write(@csv)
+
     end
 
     private
