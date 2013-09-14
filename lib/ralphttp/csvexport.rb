@@ -43,6 +43,7 @@ module Ralphttp
     #
     # Returns nil
     def write(file)
+      @data.unshift(@header)
       storage = File.open(file, 'w')
 
       @data.each do |d|
