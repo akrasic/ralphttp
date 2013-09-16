@@ -95,9 +95,9 @@ module Ralphttp
   # Returns String User Agent
   def return_user_agent
     if @ua.nil?
-      user_agent = { 'User-Agent' => 'Ralphttp-Wreck' }
+      { 'User-Agent' => 'Ralphttp-Wreck' }
     else
-      user_agent = { 'User-Agent' => @ua }
+      { 'User-Agent' => @ua }
     end
   end
 
@@ -108,10 +108,10 @@ module Ralphttp
   #
   # Returns nil
   def apply_processed_data(droplet)
-      unless @bucket[Time.now.to_i].kind_of?(Array)
-        @bucket[Time.now.to_i] = []
-      end
-      @bucket[Time.now.to_i] << droplet
+    unless @bucket[Time.now.to_i].kind_of?(Array)
+      @bucket[Time.now.to_i] = []
+    end
+    @bucket[Time.now.to_i] << droplet
   end
 
   # Private: Get number of HTTP status codes and their count

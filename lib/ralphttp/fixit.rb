@@ -100,16 +100,15 @@ module Ralphttp
     # Returns Array containing summarized data
     def print_detailed_report
       @req = []
-      @bucket.map do |time, data|
-        reqs = data.length
-        @req << reqs
+      @bucket.keys.sort.map do |time|
+        @req << @bucket[time].length
         date = Time.at(time)
-        ms = calc_response(data)
+        ms = calc_response(@bucket[time])
 
-        @csvexport.add_row([date, reqs, ms]) unless @csv.nil?
+        @csvexport.add_row([date, @bucket[time].length, ms]) unless @csv.nil?
 
         puts sprintf('%-30s %-10s %-20s',
-                     date, reqs, ms) unless @detailed.nil?
+                     date, @bucket[time].length, ms) unless @detailed.nil?
       end
     end
 
